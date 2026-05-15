@@ -19,3 +19,22 @@ wheels/
 # git push -u origin main
 # git checkout -b simple-web-server
 # git push -u origin simple-web-server
+
+#💻  Machine 2: Setup and Work
+# git clone https://github.com
+# cd fastapi_beyond_crud
+# git fetch --all
+# git checkout simple-web-server
+# uv sync
+# git add .
+# git commit -m "Completed books CRUD REST API"
+# git checkout -b books-crud-api02
+# git push -u origin books-crud-api02
+
+# 💻 Machine 1: Syncing the Changes Back
+# git fetch origin
+# git checkout books-crud-api02
+# git pull origin books-crud-api02
+# uv sync
+
+# A Git merge conflict if you accidentally edit the same branch on both machines without pulling.
