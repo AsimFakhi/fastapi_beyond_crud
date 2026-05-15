@@ -38,3 +38,4 @@ wheels/
 # uv sync
 
 # A Git merge conflict if you accidentally edit the same branch on both machines without pulling.
+# postgresql://neondb_owner:npg_BxoYic3hHr0N@ep-tiny-silence-aojf3d4c.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=req
