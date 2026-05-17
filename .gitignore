@@ -9,6 +9,7 @@ wheels/
 
 # Virtual environments
 .venv
+.env*
 
 # git add .
 # source /Users/asimfakhi/Developer/fastapi_beyond_crud/.venv/bin/activate
