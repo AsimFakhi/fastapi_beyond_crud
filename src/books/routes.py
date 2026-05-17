@@ -1,10 +1,12 @@
 from fastapi import APIRouter, status
 from fastapi.exceptions import HTTPException
 from typing import List
+from sqlmodel import select
 
 from src.books.books_data import books
+from src.books.models import Book
 from src.books.schemas import BookSchema, BookUpdateSchema
-
+from src.db.main import AsyncSessionLocal
 book_router = APIRouter()
 
 
@@ -39,3 +41,10 @@ async def delete_book(book_id:int):
             return {}
 
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found.")
+
+# AsyncsSession way to work with database
+@book_router.get("/books_all")
+async def get_books():
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(select(Book))
+        return result.all()
