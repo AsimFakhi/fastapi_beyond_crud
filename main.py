@@ -1,14 +1,15 @@
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
 from src.books.routes import book_router
 from src.db.main import initdb
-from contextlib import asynccontextmanager
 
 version = 'v1'
 @asynccontextmanager
-async def lifespan(app:FastAPI):
+async def lifespan(app: FastAPI):
     print("Server is starting...")
     await initdb()
     yield 
+    # await engine.dispose()
     print("Server is stopping...")
 
 app = FastAPI(
