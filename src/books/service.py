@@ -77,11 +77,10 @@ class BookService:
         Args -> book_uid (str): the UUID of the book.
         """
         book_to_delete =await self.get_book(book_uid, session)
-
         if book_to_delete is not None:
             await session.delete(book_to_delete)
             await session.commit()
-            return {}
+            return {"message":f"Book ==> {book_to_delete.title} has been deleted"}
         else:
             return None
         

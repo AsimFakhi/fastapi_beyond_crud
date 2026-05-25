@@ -18,8 +18,13 @@ class UserResponseSchema(BaseModel):
     is_verified: bool
     created_at: datetime 
     updated_at: datetime   
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, exclude={"password_hash"})
 
 class UserLoginSchema(BaseModel):
     email: EmailStr
     password: str
+
+class TokenUserData(BaseModel):
+    uid: str
+    email: str
+    username: str | None = None
