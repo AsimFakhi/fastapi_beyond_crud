@@ -1,30 +1,27 @@
 from fastapi import FastAPI
-from typing import Optional
+from contextlib import asynccontextmanager
+from src.books.routes import book_router
+from src.auth.routes import auth_router
+from src.db.main import initdb
 
-app = FastAPI()
+version = 'v1'
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Server is starting...")
+    await initdb()
+    yield 
+    # await engine.dispose()
+    print("Server is stopping...")
 
-user_list = [
-   "Asim",
-   "Saud",
-   "Atiya"
-]
+app = FastAPI(
+    title='FastAPI beyond CRUD',
+    description='A RESTful API for a book review web service',
+    version=version,
+    lifespan=lifespan
+)
+
+app.include_router(book_router, prefix=f'/api/{version}/books', tags=['books'])
+app.include_router(auth_router, prefix=f'/api/{version}/auth', tags=['auth'])
 
 
-@app.get('/')
-async def read_root():
-    return {'message': 'Bismillah!!'}
 
-@app.get('/greet/{username}')
-async def greet(username:str):
-    return {"message": f"Hello {username}"}
-
-@app.get('/greet/')
-async def greet(username:Optional[str]='User'):
-    return {"message": f"Hello {username}"}
-
-@app.get('/search')
-async def search_for_user(username:str):
-        if username in user_list:
-            return {"message": f"Users details fetched for {username}"}
-        else:
-            return {"message": "User not found."}
