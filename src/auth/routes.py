@@ -28,6 +28,7 @@ async def create_user_account(user_data:UserCreateSchema, session:AsyncSession =
         )
     new_user = await user_service.create_user(user_data, session)
     return new_user
+
 @auth_router.post("/login")
 async def login_users(
     login_data: UserLoginSchema,
@@ -52,7 +53,7 @@ async def login_users(
         "email": user.email,
         "username": user.username,
     }
-    print(user_data)
+    # print(user_data)
     access_token = create_access_token(user_data=user_data)
     refresh_token = create_refresh_token(user_data=user_data)
 
@@ -69,6 +70,7 @@ async def login_users(
         content={
             "message":"Login Successful",
             "access_token": access_token,
+            "authorization_paste": f"Bearer {access_token}",
             "refresh_token": refresh_token,
             "token_type": "bearer",
             "expires_in": CONF.ACCESS_TOKEN_EXPIRY_MINUTES*60,
@@ -86,7 +88,7 @@ async def refresh_access_token(token_data:dict=Depends(refresh_token_bearer)):
     """
 
     user_data = token_data.get("user",{})
-    print("==================================",user_data)
+    # print("==================================",user_data)
     #Issue new access token
     new_access_token = create_access_token(user_data=user_data) 
 

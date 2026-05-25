@@ -7,7 +7,8 @@ class UserCreateSchema(BaseModel):
     first_name: str = Field(min_length=1, max_length=20)
     last_name: str = Field(min_length=1, max_length=20)
     email: EmailStr
-    password: str = Field(min_length=4)
+    password: str = Field(min_length=4),
+    role: str
 
 class UserResponseSchema(BaseModel):
     uid: UUID
@@ -16,6 +17,7 @@ class UserResponseSchema(BaseModel):
     last_name: str
     email: str
     is_verified: bool
+    role: str
     created_at: datetime 
     updated_at: datetime   
     model_config = ConfigDict(from_attributes=True, exclude={"password_hash"})

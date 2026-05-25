@@ -2,6 +2,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.exceptions import HTTPException
 from fastapi import status, Request, Depends
 from sqlmodel.ext.asyncio.session import AsyncSession
+from typing import List
 from src.db.main import get_session
 from src.auth.service import UserService
 from src.auth.models import User
@@ -106,16 +107,21 @@ async def get_current_user(
             detail="User not found",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    # user_data = {
-    #     "username": user.username,
-    #     "email": user.email,
-    #     "uid": str(user.uid),
-    #     "first_name": user.first_name,
-    #     "last_name": user.last_name,
-    #     "is_verified": user.is_verified,
-    #     "created_at": user.created_at.isoformat(),
-    #     "updated_at": user.updated_at.isoformat()
-
-    # }
-
     return UserResponseSchema.model_validate(user)
+
+# ─── Role Checker ──────────────────────────────────────
+class RoleChecker:
+    def __init__(self, allowed_roles:List[str]):
+        self.allowed_roles = allowed_roles
+    def __call__(self, current_user:UserResponseSchema=Depends(get_current_user)):
+        if current_user.role in self.allowed_roles:
+            return True
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"Insufficient rights. Role Assigned {current_user.role}"
+        )
+    
+# Pre-defined role checkers
+require_user = RoleChecker(["user", "author", "admin"])      # Any authenticated user
+require_author = RoleChecker(["author", "admin"])            # Authors and admins
+require_admin = RoleChecker(["admin"])                       # Admins only
