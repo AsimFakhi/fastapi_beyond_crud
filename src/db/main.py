@@ -9,7 +9,8 @@ ssl_context = ssl.create_default_context()
 engine = create_async_engine(
     url=CONF.DATABASE_URL,
     # echo = True,
-    connect_args={"ssl": ssl_context}
+    connect_args={"ssl": ssl_context},
+    pool_pre_ping=True
     # For asyncpg: connect_args={"ssl": ssl_context}
     # For psycopg (async): connect_args={"sslmode": "require"} or similar
 )
