@@ -3,6 +3,7 @@ from src.auth.schemas import UserCreateSchema, UserLoginSchema, UserResponseSche
 from src.auth.utils import generate_password_hash, verify_password
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import select
+import uuid
 
 class UserService:
     async def get_user_by_email(self, email: str, session: AsyncSession):
@@ -38,3 +39,10 @@ class UserService:
         await session.refresh(new_user)
         return new_user
     
+    async def get_user_by_uid(self, uid: str, session: AsyncSession):
+        """Fetch user by UUID string."""
+        uid_uuid = uuid.UUID(uid)  # Convert string to UUID object
+        statement = select(User).where(User.uid == uid_uuid)
+        result = await session.exec(statement)
+        user = result.first()
+        return user
